@@ -1,0 +1,44 @@
+version: '3.8'
+services:
+  app:
+    container_name: em-test-task-app
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./src/.env
+    depends_on:
+      - db
+    networks:
+      - my_network
+
+  db:
+    container_name: em-test-task-db
+    image: postgres:13
+    env_file:
+      - ./src/.env
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_data_local:/var/lib/postgresql/data/
+      - ./db_init.sh:/docker-entrypoint-initdb.d/init-db.sh
+    networks:
+      - my_network
+volumes:
+  postgres_data_local:
+
+
+networks:
+ my_network:
+    driver: bridge

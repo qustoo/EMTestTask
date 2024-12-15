@@ -1,0 +1,44 @@
+[tool.black]
+color = true
+target-version = ["py310", "py39", "py311"]
+include = '\.pyi?$'
+extend-exclude = '''
+    /(
+        | \.pytest_cache
+        | \.env.example
+        | \.env
+        | \__pycache__
+        | migrations
+    )/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 120
+color_output = true
+skip = ["__init__.py", ".env", ".env.example"]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+combine_as_imports = true
+
+[tool.flake8]
+max-line-length = 120
+ignore = ["E203", "E266", "E501", "W503"]
+exclude = ["migrations", ".git", "__pycache__", "__init__.py", ".env", ".env.example"]
+count = true
+
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+asyncio_default_fixture_loop_scope = "session"
+python_files = ["test_*.py", "*_test.py"]
+python_functions = ["*_test", "test_*"]
+norecursedirs = [".env", "migrations"]
+asyncio_mode = "auto"
+addopts = '-p no:warnings'
+testpaths = [
+    "tests/unit/test_author.py",
+    "tests/unit/test_book.py",
+    "tests/unit/test_borrow.py",
+]

@@ -1,0 +1,17 @@
+services:
+  db:
+    container_name: books-db
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    env_file:
+      - src/.env
+    volumes:
+      - postgres_books_data_storages:/var/lib/postgresql/data/
+
+volumes:
+  postgres_books_data_storages:
